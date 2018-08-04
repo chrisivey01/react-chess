@@ -56,8 +56,10 @@ export default class Board extends React.Component{
 
 
 //takes clicked square and adds clicked property
-        if(chessImport.board[index].clicked !== true) {
-            chessImport.board[index].clicked = true;
+        if(pieces !== null) {
+            if (chessImport.board[index].clicked !== true) {
+                chessImport.board[index].clicked = true;
+            }
         }
 
     }
