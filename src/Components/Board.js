@@ -7,45 +7,100 @@ export default class Board extends React.Component{
         super(props)
 
         this.state={
-            board:[]
+            chessImport:{},
+            move:[],
+            moves:[]
         }
     }
 
+    componentWillMount(){
+        let chessImport = chessRules.getInitialPosition();
+        console.log(chessImport)
 
-    componentWillMount (){
-        let test = chessRules.getInitialPosition().board;
-        let blankSpace = {}
-        for(let i=0; i< test.length; i++){
-            if(test[i] === null){
-                test[i] = blankSpace
-            }else{
-                test[i].clicked = false
+        this.setState({
+            chessImport:chessImport
+        })
+
+    }
+
+    selected(index, pieces){
+        let {chessImport} = this.state
+        let availableMoves = chessRules.getAvailableMoves(chessImport);
+        let move;
+        console.log(index)
+        console.log(chessImport)
+        console.log(availableMoves)
+
+//shows available moves bottom right corner
+        this.showMoves()
+
+
+//show possible moves
+        let dest = []
+
+        if(dest.length === 0) {
+            availableMoves.forEach((task) => {
+                if (task.src === index) {
+                    dest.push(task)
+                }
+            })
+        }
+
+        for(let i=0; i<dest.length; i ++) {
+            if(chessImport.board[dest[i].dst] === null){
+                chessImport.board.splice([dest[i].dst], 1, {possible:true})
+            }else {
+                chessImport.board[dest[i].dst].possible = true
             }
         }
 
-        this.setState({
-            board:test
-        })
-        console.log(test)
+
+//takes clicked square and adds clicked property
+        if(chessImport.board[index].clicked !== true) {
+            chessImport.board[index].clicked = true;
+        }
+
     }
 
-    render(){
-        return(
+    showMoves = ()=>{
+        let {chessImport} = this.state
+        let availableMoves = chessRules.getAvailableMoves(chessImport);
+        let results = [];
+        for (let move in availableMoves) {
+            results.push(chessRules.moveToPgn(chessImport, availableMoves[move]));
+        }
 
+        this.setState({
+            move:results
+        })
+    }
+
+
+    //let results = board.map(function(value) { return value == null ? {} : value; });
+
+    render(){
+        let {chessImport, move} = this.state
+
+        return(
+            <div>
                 <table className="board">
                     <tbody>
-                    <tr>
-                        {
-                            this.state.board.map((squares,i) =>
+
+                        <tr>
+
                             {
-                                return <Square squares={squares} iterator={i}/>
-                               // return <td className="chessSquare">{squares.type}</td>
-                            })
-                        }
-                    </tr>
+                                chessImport.board.map((pieces,i) =>
+                                {
+                                    return <Square index={i} pieces={pieces == null ? {} : pieces} chessImport={chessImport} key={i} onClick={this.selected.bind(this,i, pieces)}/>
+                                })
+                            }
+                        </tr>
                     </tbody>
                 </table>
 
-        )
-    }
+                <div>
+                    { '' + move + ''}
+                </div>
+            </div>
+    )}
 }
