@@ -9,7 +9,9 @@ export default class Board extends React.Component{
         this.state={
             chessImport:{},
             move:[],
-            moves:[]
+            moves:[],
+            toggle:false,
+            value:null
         }
     }
 
@@ -24,43 +26,133 @@ export default class Board extends React.Component{
     }
 
     selected(index, pieces){
-        let {chessImport} = this.state
+        let {chessImport, toggle,value} = this.state
         let availableMoves = chessRules.getAvailableMoves(chessImport);
-        let move;
-        console.log(index)
-        console.log(chessImport)
-        console.log(availableMoves)
+        // let valueCheckerIndex = value;
+//        let valuePieces;
+
 
 //shows available moves bottom right corner
         this.showMoves()
 
 
 //show possible moves
-        let dest = []
 
-        if(dest.length === 0) {
-            availableMoves.forEach((task) => {
-                if (task.src === index) {
-                    dest.push(task)
-                }
-            })
-        }
-
-        for(let i=0; i<dest.length; i ++) {
-            if(chessImport.board[dest[i].dst] === null){
-                chessImport.board.splice([dest[i].dst], 1, {possible:true})
-            }else {
-                chessImport.board[dest[i].dst].possible = true
-            }
-        }
-
-
-//takes clicked square and adds clicked property
-        if(pieces !== null) {
+//takes clicked square and adds clicked property and removes off old clicked square
+        if (pieces !== null) {
             if (chessImport.board[index].clicked !== true) {
                 chessImport.board[index].clicked = true;
+                if(value) {
+                    chessImport.board[value].clicked = false;
+                }
+                this.setState({
+                    value:index
+                })
             }
         }
+
+
+
+
+        let toggled = toggle;
+        let dest = []
+
+        toggled = !toggled
+        if(toggled === true) {
+
+            if (dest.length === 0) {
+                availableMoves.forEach((task) => {
+                    if (task.src === index) {
+                        dest.push(task)
+                    }
+                })
+            }
+
+            for (let i = 0; i < dest.length; i++) {
+                if (chessImport.board[dest[i].dst] === null) {
+                    chessImport.board.splice([dest[i].dst], 1, {possible: true})
+                } else {
+                    chessImport.board[dest[i].dst].possible = true
+                }
+            }
+        }else{
+            let board = chessImport.board.filter
+
+
+            (function(piece){
+                return piece !== null ;
+            })
+
+            board.filter(function(o){
+                return o.possible == true ?  o.possible = false : o
+            })
+
+            if (dest.length === 0) {
+                availableMoves.forEach((task) => {
+                    if (task.src === index) {
+                        dest.push(task)
+                    }
+                })
+            }
+
+            for (let i = 0; i < dest.length; i++) {
+                if (chessImport.board[dest[i].dst] === null) {
+                    chessImport.board.splice([dest[i].dst], 1, {possible: true})
+                } else {
+                    chessImport.board[dest[i].dst].possible = true
+                }
+            }
+        }
+
+        this.setState({
+            toggle:toggled
+        })
+
+
+
+        // if(toggle === true){
+        //     let objIndex = chessImport.board.filter(function(o){return o == null ?  o.possible })
+        //     let chess = chessImport;
+        //
+        //     chess.board = objIndex
+        //
+        //     this.setState({
+        //         chessImport:chess.board
+        //     })
+        //
+        // }
+        //
+        //
+        //
+        // let toggler = toggle
+        // toggler = !toggler
+        //
+        // this.setState({
+        //     toggle:toggler
+        // })
+
+
+        // if(index !== value || pieces !== null) {
+        //
+        //     for(let i= 0; i<chessImport.board.length; i++){
+        //         let objIndex = chessImport.board.filter(o => o == null ?  {} : o.possible = false )
+        //
+        //         if(objIndex > -1) {
+        //             chessImport.board.slice(objIndex, 1)
+        //         }
+        //         if (pieces !== null) {
+        //             if (chessImport.board[index].clicked !== true) {
+        //                 chessImport.board[index].clicked = true;
+        //             }
+        //         }
+        //     }
+        //
+        //
+        //     this.setState({
+        //         value:index
+        //     })
+        //
+        // }
 
     }
 
