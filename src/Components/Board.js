@@ -45,114 +45,51 @@ export default class Board extends React.Component{
                 if(value) {
                     chessImport.board[value].clicked = false;
                 }
-                this.setState({
-                    value:index
-                })
+                if(value !== index) {
+
+                    let board = chessImport.board.filter(Boolean)
+                        if(board.filter((o) => o.possible == true)){
+                            board.filter((o) => o.possible = false)
+                        }
+                        // if(board.filter((o) => o.possible == true)){
+                        //     board.filter((o) => o.possible = false)
+                        // }
+                    console.log(board)
+
+                }
+
             }
         }
 
 
 
 
-        let toggled = toggle;
         let dest = []
-
-        toggled = !toggled
-        if(toggled === true) {
-
-            if (dest.length === 0) {
-                availableMoves.forEach((task) => {
-                    if (task.src === index) {
-                        dest.push(task)
-                    }
-                })
-            }
-
-            for (let i = 0; i < dest.length; i++) {
-                if (chessImport.board[dest[i].dst] === null) {
-                    chessImport.board.splice([dest[i].dst], 1, {possible: true})
-                } else {
-                    chessImport.board[dest[i].dst].possible = true
+        if (dest.length === 0) {
+            availableMoves.forEach((task) => {
+                if (task.src === index) {
+                    dest.push(task.dst)
                 }
-            }
-        }else{
-            let board = chessImport.board.filter
-
-
-            (function(piece){
-                return piece !== null ;
             })
+        }
 
-            board.filter(function(o){
-                return o.possible == true ?  o.possible = false : o
-            })
-
-            if (dest.length === 0) {
-                availableMoves.forEach((task) => {
-                    if (task.src === index) {
-                        dest.push(task)
-                    }
-                })
-            }
-
-            for (let i = 0; i < dest.length; i++) {
-                if (chessImport.board[dest[i].dst] === null) {
-                    chessImport.board.splice([dest[i].dst], 1, {possible: true})
-                } else {
-                    chessImport.board[dest[i].dst].possible = true
-                }
+        for(let i = 0; i< dest.length; i++){
+            chessImport.board[i].possible = false;
+        }
+        for (let i = 0; i < dest.length; i++) {
+            if (chessImport.board[dest[i]] === null) {
+                chessImport.board.splice([dest[i]], 1, {possible: true})
+            } else {
+                chessImport.board[dest[i]].possible = true
             }
         }
+
+
 
         this.setState({
-            toggle:toggled
+            value:index
         })
 
-
-
-        // if(toggle === true){
-        //     let objIndex = chessImport.board.filter(function(o){return o == null ?  o.possible })
-        //     let chess = chessImport;
-        //
-        //     chess.board = objIndex
-        //
-        //     this.setState({
-        //         chessImport:chess.board
-        //     })
-        //
-        // }
-        //
-        //
-        //
-        // let toggler = toggle
-        // toggler = !toggler
-        //
-        // this.setState({
-        //     toggle:toggler
-        // })
-
-
-        // if(index !== value || pieces !== null) {
-        //
-        //     for(let i= 0; i<chessImport.board.length; i++){
-        //         let objIndex = chessImport.board.filter(o => o == null ?  {} : o.possible = false )
-        //
-        //         if(objIndex > -1) {
-        //             chessImport.board.slice(objIndex, 1)
-        //         }
-        //         if (pieces !== null) {
-        //             if (chessImport.board[index].clicked !== true) {
-        //                 chessImport.board[index].clicked = true;
-        //             }
-        //         }
-        //     }
-        //
-        //
-        //     this.setState({
-        //         value:index
-        //     })
-        //
-        // }
 
     }
 
